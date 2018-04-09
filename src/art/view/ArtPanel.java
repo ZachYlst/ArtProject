@@ -55,7 +55,10 @@ public class ArtPanel extends JPanel
 		
 		canvas = new ShapeCanvas(app);
 		sliderPanel = new JPanel();
+		appLayout.putConstraint(SpringLayout.WEST, sliderPanel, 20, SpringLayout.EAST, this);
 		buttonPanel = new JPanel(new GridLayout(0,1));
+		appLayout.putConstraint(SpringLayout.NORTH, sliderPanel, 0, SpringLayout.NORTH, buttonPanel);
+		appLayout.putConstraint(SpringLayout.WEST, buttonPanel, 40, SpringLayout.EAST, this);
 		
 		triangleButton = new JButton("add triangle");
 		rectangleButton = new JButton("add rectangle");
@@ -69,8 +72,96 @@ public class ArtPanel extends JPanel
 		setupPanel();
 		setupLayout();
 		setupListeners();
+	}
+	
+	private void setupSliders()
+	{
+		Hashtable<Integer, JLabel> scaleLabels = new Hashtable<Integer, JLabel>();
+		Hashtable<Integer, JLabel> edgeLabels = new Hashtable<Integer, JLabel>();
+		
+		scaleLabels.put(MINIMUM_SCALE, new JLabel("<HTML>Small<BR>Shape</HTML>"));
+		scaleLabels.put((MAXIMUM_SCALE + MINIMUM_SCALE) / 2, new JLabel("<HTML>Medium<BR>Shape</HTML>"));
+		scaleLabels.put(MAXIMUM_SCALE, new JLabel("<HTML>Small<BR>Shape</HTML>"));
+		
+		edgeLabels.put(MINIMUM_EDGE, new JLabel("Edges: " + MINIMUM_EDGE));
+		edgeLabels.put(MAXIMUM_EDGE, new JLabel("Edges: " + MAXIMUM_EDGE));
+		
+		scaleSlider.setLabelTable(scaleLabels);
+		scaleSlider.setOrientation(JSlider.VERTICAL);
+		scaleSlider.setSnapToTicks(true);
+		scaleSlider.setMajorTickSpacing(10);
+		scaleSlider.setPaintTicks(true);
+		scaleSlider.setPaintLabels(true);
+		
+		edgeSlider.setLabelTable(edgeLabels);
+		edgeSlider.setOrientation(JSlider.VERTICAL);
+		edgeSlider.setSnapToTicks(true);
+		edgeSlider.setMajorTickSpacing(3);
+		edgeSlider.setMinorTickSpacing(1);
+		edgeSlider.setPaintTicks(true);
+		edgeSlider.setPaintLabels(true);	
+	}
+	
+	private void setupPanel()
+	{
+		this.setLayout(appLayout);
+		this.setBackground(Color.DARK_GRAY);
+		this.setPreferredSize(new Dimension(1024,768));
+		this.add(canvas);
+		
+		buttonPanel.setPreferredSize(new Dimension(200,450));
+		buttonPanel.add(triangleButton);
+		buttonPanel.add(rectangleButton);
+		buttonPanel.add(ellipseButton);
+		buttonPanel.add(polygonButton);
+		buttonPanel.add(clearButton);
+		buttonPanel.add(saveButton);
+		buttonPanel.add(colorButton);
+		
+		sliderPanel.setPreferredSize(new Dimension(250,450));
+		sliderPanel.add(scaleSlider);
+		sliderPanel.add(edgeSlider);
+		
+		this.add(buttonPanel);
+		this.add(sliderPanel);
+	}
+	
+	private void setupLayout()
+	{
 		
 	}
 	
+	private boolean coinFlip()
+	{
+		return (int) (Math.random() * 2) == 0;
+	}
 	
+	private Polygon createPolygon(int sides)
+	{
+		Polygon currentShape = new Polygon();
+		
+		int originX = (int) (Math.random() * 600);
+		int originY = (int) (Math.random() * 600);
+		
+		for (int index = 0; index < sides; index++)
+		{
+			int minus = coinFlip() ? -1 : 1;
+			int shiftX = (int) (Math.random() * currentScale) * minus;
+			minus = coinFlip() ? -1 : 1;
+			int shiftY = (int) (Math.random() * currentScale) * minus;
+			currentShape.addPoint(originX + shiftX,  originY + shiftY);
+		}
+		
+		return currentShape;
+	}
+	
+	private Rectangle createRectangle()
+	{
+		
+	}
+	
+	private void setupListeners()
+	{
+		
+	}
 }
